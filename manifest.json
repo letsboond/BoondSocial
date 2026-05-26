@@ -1,0 +1,22 @@
+{
+  "short_name": "Boond",
+  "name": "Boond - Connectivity",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#0f172a",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#0f172a",
+  "description": "Boond is a social connectivity platform connecting the real world."
+}

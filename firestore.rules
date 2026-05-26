@@ -1,0 +1,45 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == userId;
+      
+      match /connections/{connectionId} {
+      	allow read: if true;
+        // User can write their own connections
+        // AND User can write to OTHERS connections if adding THEMSELVES (Mutual Add)
+        allow write: if request.auth != null && (request.auth.uid == userId || request.resource.data.uid == request.auth.uid);
+      }
+      
+      match /requests/{requestId} {
+        // Read: Owner (Receiver) or Sender
+        allow read: if request.auth != null && (request.auth.uid == userId || request.auth.uid == resource.data.fromUid);
+        // Write: Sender can create/delete their own request. Owner can delete.
+        allow create: if request.auth != null && request.resource.data.fromUid == request.auth.uid;
+        allow delete: if request.auth != null && (request.auth.uid == userId || resource.data.fromUid == request.auth.uid);
+      }
+
+      match /posts/{postId} {
+        allow read: if true;
+        allow write: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+    
+    // Chat Rules
+    match /chats/{chatId} {
+      // Allow access if user's UID is part of the ID (uid1_uid2)
+      allow read, write: if request.auth != null && (
+        chatId.matches(request.auth.uid + '_.*') || 
+        chatId.matches('.*_' + request.auth.uid)
+      );
+      
+      match /messages/{messageId} {
+        allow read, write: if request.auth != null && (
+             chatId.matches(request.auth.uid + '_.*') || 
+             chatId.matches('.*_' + request.auth.uid)
+        );
+      }
+    }
+  }
+}

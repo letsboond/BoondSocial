@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <!-- Global Error Handler (Must be first) -->
+    <script>
+        window.onerror = function (message, source, lineno, colno, error) {
+            const root = document.getElementById('root') || document.body;
+            root.innerHTML = `<div style="color: red; padding: 20px; font-family: monospace; background: white;">
+                <h3>Application Error</h3>
+                <p>${message}</p>
+                <p>Source: ${source}:${lineno}</p>
+            </div>`;
+            return false;
+        };
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boond - Connecting Real World</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0f172a">
+    <link rel="apple-touch-icon" href="/icon-192.png">
+
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- React Router DOM v5.3.4 (Stable for CDN / No-Build) -->
+    <script crossorigin src="https://unpkg.com/react-router-dom@5.3.4/umd/react-router-dom.min.js"></script>
+
+    <!-- Babel (untuk JSX) -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Tailwind CSS (CDN Play CDN - Dev Only) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9', // Sky Blue
+                            600: '#0284c7',
+                            900: '#0c4a6e',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Quicksand', 'sans-serif'],
+                        heading: ['Quicksand', 'sans-serif'], // Changed to Quicksand
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Fonts: Quicksand Only -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Firebase SDK (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <!-- Framer Motion (UMD via Unpkg) -->
+    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+
+    <!-- Icons (Lucide) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+
+
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #0f172a;
+            color: white;
+            /* overflow: hidden; Removed to allow body scroll for Pull-to-Refresh */
+        }
+
+        /* Global Heading Override - All Quicksand */
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+        }
+
+        /* Hide Scrollbar Globally */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        * {
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <!-- Maps API (Secure via Referrer Restriction in Google Cloud Console) -->
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4Eglv1xPpa53q5V6IxJwQoPqmdT5ow6Q&libraries=places"></script>
+
+    <!-- Application Scripts (Loaded Sequentially) -->
+
+    <!-- 1. Data & Services -->
+    <script src="/src/services/firebase.js"></script>
+    <script type="text/babel" src="/src/data/mock_data.js"></script>
+
+    <!-- 2. Components -->
+    <script type="text/babel" src="/src/components/ChatRoom.js"></script>
+    <script type="text/babel" src="/src/components/BottomNav.js"></script>
+    <script type="text/babel" src="/src/components/MapsView.js"></script>
+    <script type="text/babel" src="/src/components/CommunityView.js"></script>
+    <script type="text/babel" src="/src/components/HistoryView.js?v=15"></script>
+    <script type="text/babel" src="/src/components/BuyView.js"></script>
+    <script type="text/babel" src="/src/components/Hero.js"></script>
+    <script type="text/babel" src="/src/components/LoginView.js?v=15"></script>
+    <script type="text/babel" src="/src/components/CommunityFeed.js"></script>
+    <!-- Kept just in case, but unused in App.js now -->
+    <script type="text/babel" src="/src/components/ProfileView.js?v=15"></script>
+
+    <!-- 3. Main App Logic (Must be last) -->
+    <script type="text/babel" src="/src/App.js?v=15"></script>
+
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('SW registered: ', reg.scope))
+                    .catch(err => console.log('SW registration failed: ', err));
+            });
+        }
+    </script>
+</body>
+
+</html>
