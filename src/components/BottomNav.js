@@ -58,11 +58,11 @@ const BottomNav = ({ t }) => {
                                     ${isLast ? 'border-r rounded-r-2xl' : 'border-r border-slate-200/60'}
                                     ${active ? 'text-blue-600 bg-blue-50/80' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50/80'}`}
                             >
-                                {/* Active Indicator — INSIDE each Link (relative parent), top-0 is not clipped */}
+                                {/* Active Indicator — centered using inset-x-0 + mx-auto */}
                                 {active && (
                                     <motion.div
                                         layoutId="bottomNavGlow"
-                                        className="absolute top-0 left-1/2 -translate-x-1/2 w-10 h-[3px] bg-blue-600 rounded-b-full shadow-[0_2px_8px_rgba(37,99,235,0.5)]"
+                                        className="absolute top-0 inset-x-0 mx-auto w-10 h-[3px] bg-blue-600 rounded-b-full shadow-[0_2px_8px_rgba(37,99,235,0.5)]"
                                     />
                                 )}
 
