@@ -3,12 +3,12 @@
 // Using the global 'firebase' object from the compat scripts loaded in index.html
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBxpVobPBzSJrswAMv-Xhwqwy1NabRJ8qQ",
-    authDomain: "boond-efd01.firebaseapp.com",
-    projectId: "boond-efd01",
-    storageBucket: "boond-efd01.firebasestorage.app",
-    messagingSenderId: "1088911916262",
-    appId: "1:1088911916262:web:5bf1e063d5717968a2cf27"
+    apiKey: "AIzaSyBxHyi8WgV0RG9dMuqk0f31Qlgw0h9j1ak",
+    authDomain: "boond-social.firebaseapp.com",
+    projectId: "boond-social",
+    storageBucket: "boond-social.firebasestorage.app",
+    messagingSenderId: "969550234999",
+    appId: "1:969550234999:web:14453f6d92d480dccc0d72"
 };
 
 // Initialize Firebase
