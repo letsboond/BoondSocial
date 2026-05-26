@@ -42,7 +42,7 @@ const Layout = ({ children, t, lang, setLang }) => {
                 onClick={() => history.push('/')}
                 className={`fixed z-50 transition-all duration-500 rounded-full overflow-hidden shadow-2xl border border-slate-200 cursor-pointer hover:scale-105 active:scale-95 ${isMaps
                     ? 'top-12 left-1/2 -translate-x-1/2 w-24 h-24'
-                    : 'top-6 right-6 md:top-10 md:right-10 w-16 h-16'
+                    : 'top-6 left-6 md:top-10 md:left-10 w-16 h-16'
                     }`}
             >
                 <div className="w-full h-full bg-white/80 backdrop-blur-md">
@@ -54,7 +54,7 @@ const Layout = ({ children, t, lang, setLang }) => {
             {!isMaps && (
                 <button
                     onClick={() => setLang(lang === 'id' ? 'en' : 'id')}
-                    className="fixed top-9 left-6 md:top-10 md:left-10 z-50 bg-white/50 backdrop-blur-md border border-slate-200 px-5 py-2.5 rounded-xl text-base font-bold text-slate-700 hover:bg-white hover:shadow-lg transition-all flex items-center gap-2.5"
+                    className="fixed top-9 right-6 md:top-10 md:right-10 z-50 bg-white/50 backdrop-blur-md border border-slate-200 px-5 py-2.5 rounded-xl text-base font-bold text-slate-700 hover:bg-white hover:shadow-lg transition-all flex items-center gap-2.5"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>
                     {lang === 'id' ? 'ID' : 'EN'}
