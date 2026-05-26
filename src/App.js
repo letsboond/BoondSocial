@@ -560,10 +560,10 @@ const App = () => {
             <Layout t={t} lang={lang} setLang={setLang}>
                 <Switch>
                     <Route exact path="/">
-                        <MapsView t={t} />
+                        <Redirect to="/profile" />
                     </Route>
                     <Route path="/explore">
-                        <Redirect to="/" />
+                        <Redirect to="/profile" />
                     </Route>
                     <Route path="/community">
                         <CommunityView t={t} lang={lang} />

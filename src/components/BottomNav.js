@@ -16,8 +16,8 @@ const BottomNav = ({ t }) => {
 
     const finalItems = [
         { id: '/buy', path: '/buy', icon: 'shopping-bag', label: t('nav_shop') },
-        { id: '/community', path: '/community', icon: 'users', label: t('nav_community') },
-        { id: '/maps', path: '/', icon: 'map', label: t('nav_explore') },
+        // { id: '/community', path: '/community', icon: 'users', label: t('nav_community') },
+        // { id: '/maps', path: '/', icon: 'map', label: t('nav_explore') },
         { id: '/connections', path: '/connections', icon: 'contact-2', label: t('nav_history') },
         { id: '/profile', path: '/profile', icon: 'user', label: t('nav_profile') },
     ];
