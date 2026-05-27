@@ -8,7 +8,7 @@ const Layout = ({ children, t, lang, setLang }) => {
     const { BottomNav } = window;
 
     // Determine active tab
-    const isMaps = location.pathname === '/' || location.pathname === '/explore';
+    const isLogin = location.pathname === '/';
 
     return (
         <div className="bg-white min-h-screen text-slate-900 relative font-sans">
@@ -22,7 +22,7 @@ const Layout = ({ children, t, lang, setLang }) => {
             </div>
 
             {/* Main Content Area (Scrollable) */}
-            <main className={`w-full ${isMaps ? 'min-h-screen pb-0' : 'min-h-screen pb-24'} relative z-10`}>
+            <main className={`w-full ${isLogin ? 'min-h-screen pb-0' : 'min-h-screen pb-24'} relative z-10`}>
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={location.pathname}
@@ -46,7 +46,7 @@ const Layout = ({ children, t, lang, setLang }) => {
                         history.push('/profile/me');
                     }
                 }}
-                className={`fixed z-50 transition-all duration-500 rounded-full overflow-hidden shadow-2xl border border-slate-200 cursor-pointer hover:scale-105 active:scale-95 ${isMaps
+                className={`fixed z-50 transition-all duration-500 rounded-full overflow-hidden shadow-2xl border border-slate-200 cursor-pointer hover:scale-105 active:scale-95 ${isLogin
                     ? 'top-12 left-1/2 -translate-x-1/2 w-24 h-24'
                     : 'top-6 left-6 md:top-10 md:left-10 w-16 h-16'
                     }`}
@@ -56,8 +56,8 @@ const Layout = ({ children, t, lang, setLang }) => {
                 </div>
             </div>
 
-            {/* Global Language Toggle (Except Explore/Maps) */}
-            {!isMaps && (
+            {/* Global Language Toggle (Except Login) */}
+            {!isLogin && (
                 <button
                     onClick={() => setLang(lang === 'id' ? 'en' : 'id')}
                     className="fixed top-9 right-6 md:top-10 md:right-10 z-50 bg-white/50 backdrop-blur-md border border-slate-200 px-5 py-2.5 rounded-xl text-base font-bold text-slate-700 hover:bg-white hover:shadow-lg transition-all flex items-center gap-2.5"
@@ -68,7 +68,7 @@ const Layout = ({ children, t, lang, setLang }) => {
             )}
 
             {/* Bottom Navigation */}
-            <BottomNav t={t} />
+            {!isLogin && <BottomNav t={t} />}
         </div>
     );
 };
@@ -205,6 +205,24 @@ const ProfileRoute = ({ user, userProfile, t, lang, setLang }) => {
             setLang={setLang}
         />
     );
+};
+
+// --- Root Route (Handles / ) ---
+const RootRoute = ({ user, t, lang, setLang }) => {
+    const { useHistory } = window.ReactRouterDOM;
+    const { useEffect } = React;
+    const history = useHistory();
+
+    useEffect(() => {
+        if (user) {
+            const mySlug = user.username ? user.username.replace('@', '') : 'me';
+            history.replace(`/profile/${mySlug}`);
+        }
+    }, [user, history]);
+
+    if (user) return null;
+
+    return <window.LoginView t={t} lang={lang} setLang={setLang} />;
 };
 
 const App = () => {
@@ -566,7 +584,7 @@ const App = () => {
             <Layout t={t} lang={lang} setLang={setLang}>
                 <Switch>
                     <Route exact path="/">
-                        <Redirect to="/profile" />
+                        <RootRoute user={user} t={t} lang={lang} setLang={setLang} />
                     </Route>
                     <Route path="/explore">
                         <Redirect to="/profile" />
