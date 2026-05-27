@@ -24,7 +24,7 @@ const LoginView = ({ t, lang, setLang }) => {
     };
 
     return (
-        <div className="w-full min-h-screen bg-gradient-to-br from-blue-200 via-white to-blue-200 md:bg-gradient-to-br md:from-blue-100 md:via-white md:to-blue-50 flex flex-col items-center justify-center p-6 relative font-sans overflow-hidden">
+        <div className="w-full min-h-[100dvh] bg-gradient-to-br from-blue-200 via-white to-blue-200 md:bg-gradient-to-br md:from-blue-100 md:via-white md:to-blue-50 flex flex-col items-center justify-center p-6 pb-28 md:pb-12 relative font-sans overflow-hidden">
             {/* Language Toggle - Absolute Top Left */}
             {/* Language Toggle - Absolute Top Left (Enlarged) */}
 
