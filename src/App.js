@@ -96,7 +96,7 @@ const ProfileRoute = ({ user, userProfile, t, lang, setLang }) => {
                     history.replace(`/profile/${mySlug}`);
                 } else {
                     // Not logged in, go to Login
-                    history.replace('/login'); // Or render LoginView directly
+                    history.replace('/');
                 }
                 setIsLoadingProfile(false);
                 return;
@@ -107,11 +107,11 @@ const ProfileRoute = ({ user, userProfile, t, lang, setLang }) => {
                 if (user) {
                     setViewProfile(userProfile);
                     setIsOwner(true);
+                    setIsLoadingProfile(false);
                 } else {
                     // Not logged in accessing /me -> Login
-                    setViewProfile(null);
+                    history.replace('/');
                 }
-                setIsLoadingProfile(false);
                 return;
             }
 
@@ -176,10 +176,8 @@ const ProfileRoute = ({ user, userProfile, t, lang, setLang }) => {
 
     // If loading finished but no profile found (and not directed to login)
     if (!viewProfile) {
-        // If trying to access 'me' but not logged in -> Show Login
-        if (username === 'me' && !user) {
-            return <LoginView t={t} lang={lang} setLang={setLang} />;
-        }
+        // If trying to access 'me' but not logged in -> Redirect handled in fetchProfile
+
         // Real 404
         return (
             <div className="flex flex-col items-center justify-center min-h-screen text-center p-6 bg-slate-50">
