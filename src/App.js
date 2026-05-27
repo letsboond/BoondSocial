@@ -314,6 +314,8 @@ const App = () => {
                             bio: "Halo! Saya pengguna baru Boond.",
                             username: "@" + (u.email ? u.email.split('@')[0] : 'user'),
                             role: "User",
+                            accessMode: "public",
+                            isVisible: false,
                             links: [
                                 { id: 1, title: "WhatsApp", url: "", icon: "MessageCircle", color: "bg-green-500" },
                                 { id: 2, title: "Instagram", url: "", icon: "Instagram", color: "bg-pink-500" }

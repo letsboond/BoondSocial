@@ -149,7 +149,7 @@ const formatTimeLeft = (seconds) => {
 };
 
 const PrivacyControlPanel = ({ profile, currentUser, db, lang }) => {
-    const [mode, setMode] = React.useState(profile.accessMode || 'private'); // private, public, timed
+    const [mode, setMode] = React.useState(profile.accessMode || 'public'); // private, public, timed
     const [timer, setTimer] = React.useState(0);
 
     // Timer Effect
@@ -1074,28 +1074,6 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
                                 )}
                             </div>
 
-
-                            {/* Privacy Toggle (Owner Only) */}
-                            {isOwner && (
-                                <div className="flex items-center gap-3 bg-white/80 backdrop-blur px-4 py-2.5 rounded-full border border-slate-200 shadow-sm">
-                                    <div className={`relative w-3 h-3 rounded-full ${isVisible ? 'bg-green-500' : 'bg-slate-300'}`}>
-                                        {isVisible && <div className="absolute inset-0 bg-green-500 rounded-full animate-ping opacity-75"></div>}
-                                    </div>
-                                    <span className="text-xs font-bold text-slate-600 flex-1 text-left">
-                                        {isVisible
-                                            ? (lang === 'id' ? 'Terlihat di Peta' : 'Visible on Map')
-                                            : (lang === 'id' ? 'Tidak Terlihat (Ghost)' : 'Ghost Mode (Invisible)')}
-                                    </span>
-
-                                    {/* Switch UI */}
-                                    <button
-                                        onClick={handleTogglePrivacy}
-                                        className={`w-11 h-6 flex items-center rounded-full p-1 transition-colors duration-300 focus:outline-none ${isVisible ? 'bg-green-500' : 'bg-slate-300'}`}
-                                    >
-                                        <div className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform duration-300 ${isVisible ? 'translate-x-5' : 'translate-x-0'}`}></div>
-                                    </button>
-                                </div>
-                            )}
 
                             {/* MAIN ACTIONS */}
                             {/* MAIN ACTIONS */}
