@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boond-v17';
+const CACHE_NAME = 'boond-v18';
 const urlsToCache = [
     '/',
     '/index.html',
