@@ -23,7 +23,7 @@ const Layout = ({ children, t, lang, setLang }) => {
 
             {/* Main Content Area (Scrollable) */}
             <main className={`w-full ${isLogin ? 'min-h-screen pb-0' : 'min-h-screen pb-24'} relative z-10`}>
-                <AnimatePresence mode="wait">
+                <AnimatePresence>
                     <motion.div
                         key={location.pathname}
                         initial={{ opacity: 0 }}

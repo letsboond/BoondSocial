@@ -1,11 +1,11 @@
-const CACHE_NAME = 'boond-v18';
+const CACHE_NAME = 'boond-v19';
 const urlsToCache = [
     '/',
     '/index.html',
     '/logo.png',
     '/icon-192.png',
     '/icon-512.png',
-    '/src/App.js?v=17',
+    '/src/App.js?v=19',
     '/src/services/firebase.js',
     '/src/components/BottomNav.js',
     '/src/components/MapsView.js',
