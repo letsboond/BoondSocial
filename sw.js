@@ -1,17 +1,17 @@
-const CACHE_NAME = 'boond-v16';
+const CACHE_NAME = 'boond-v17';
 const urlsToCache = [
     '/',
     '/index.html',
     '/logo.png',
     '/icon-192.png',
     '/icon-512.png',
-    '/src/App.js?v=16',
+    '/src/App.js?v=17',
     '/src/services/firebase.js',
     '/src/components/BottomNav.js',
     '/src/components/MapsView.js',
     '/src/components/CommunityView.js',
-    '/src/components/ProfileView.js?v=16',
-    '/src/components/LoginView.js?v=16',
+    '/src/components/ProfileView.js?v=17',
+    '/src/components/LoginView.js?v=17',
     '/src/components/Hero.js',
     'https://cdn.tailwindcss.com',
     'https://unpkg.com/react@18/umd/react.development.js',

@@ -42,7 +42,7 @@ const BottomNav = ({ t }) => {
                         if (isProfile && window.currentUser && window.currentUser.username) {
                             linkTo = `/profile/${window.currentUser.username.replace('@', '')}`;
                         } else if (isProfile) {
-                            linkTo = '/profile/me';
+                            linkTo = '/';
                         }
 
                         const isFirst = index === 0;
