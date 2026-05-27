@@ -38,23 +38,22 @@ const Layout = ({ children, t, lang, setLang }) => {
             </main>
 
             {/* Floating Logo */}
-            <div
-                onClick={() => {
-                    if (window.currentUser && window.currentUser.username) {
-                        history.push(`/profile/${window.currentUser.username.replace('@', '')}`);
-                    } else {
-                        history.push('/profile/me');
-                    }
-                }}
-                className={`fixed z-50 transition-all duration-500 rounded-full overflow-hidden shadow-2xl border border-slate-200 cursor-pointer hover:scale-105 active:scale-95 ${isLogin
-                    ? 'top-12 left-1/2 -translate-x-1/2 w-24 h-24'
-                    : 'top-6 left-6 md:top-10 md:left-10 w-16 h-16'
-                    }`}
-            >
-                <div className="w-full h-full bg-white/80 backdrop-blur-md">
-                    <img src="/logo.png" className="w-full h-full object-cover" alt="Boond Logo" />
+            {!isLogin && (
+                <div
+                    onClick={() => {
+                        if (window.currentUser && window.currentUser.username) {
+                            history.push(`/profile/${window.currentUser.username.replace('@', '')}`);
+                        } else {
+                            history.push('/profile/me');
+                        }
+                    }}
+                    className="fixed z-50 transition-all duration-500 rounded-full overflow-hidden shadow-2xl border border-slate-200 cursor-pointer hover:scale-105 active:scale-95 top-6 left-6 md:top-10 md:left-10 w-16 h-16"
+                >
+                    <div className="w-full h-full bg-white/80 backdrop-blur-md">
+                        <img src="/logo.png" className="w-full h-full object-cover" alt="Boond Logo" />
+                    </div>
                 </div>
-            </div>
+            )}
 
             {/* Global Language Toggle (Except Login) */}
             {!isLogin && (
@@ -68,7 +67,7 @@ const Layout = ({ children, t, lang, setLang }) => {
             )}
 
             {/* Bottom Navigation */}
-            {!isLogin && <BottomNav t={t} />}
+            <BottomNav t={t} />
         </div>
     );
 };
