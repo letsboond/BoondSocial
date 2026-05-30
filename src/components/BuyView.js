@@ -27,7 +27,7 @@ const BuyView = ({ t, user, lang }) => {
 
     const products = [
         { id: 1, name: "Keychain Boond Series", image: "/gear-1.jpg" },
-        { id: 2, name: "Custom Made", image: "/gear-2.jpg" },
+        { id: 2, name: "Keychain Custom Made", image: "/gear-2.jpg" },
     ];
 
     return (
@@ -202,8 +202,11 @@ const BuyView = ({ t, user, lang }) => {
                         <div className="h-56 md:h-72 relative overflow-hidden">
                             <img src={item.image} className="w-full h-full object-cover transition duration-700 group-hover:scale-105" alt={item.name} />
                         </div>
-                        <div className="p-5 md:p-6 flex items-center justify-center relative z-10">
-                            <h3 className="font-bold text-lg md:text-2xl text-slate-900 text-center">{item.name}</h3>
+                        <div className="p-5 md:p-6 flex flex-col sm:flex-row items-center justify-between gap-4 relative z-10">
+                            <h3 className="font-bold text-lg md:text-xl text-slate-900 text-center sm:text-left">{item.name}</h3>
+                            <button className="w-full sm:w-auto bg-slate-900 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-slate-800 transition shadow-lg shadow-slate-900/20 active:scale-95 flex items-center justify-center gap-2 text-sm">
+                                {t('shop_btn_buy')} <i data-lucide="arrow-right" className="w-4 h-4"></i>
+                            </button>
                         </div>
                     </motion.div>
                 ))}
