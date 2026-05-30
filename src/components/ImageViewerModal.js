@@ -9,27 +9,35 @@ const ImageViewerModal = ({ src, onClose }) => {
 
     React.useEffect(() => {
         if (src && imgRef.current && window.Panzoom) {
-            // Initialize Panzoom
-            panzoomRef.current = window.Panzoom(imgRef.current, {
-                maxScale: 5,
-                minScale: 1,
-                contain: 'outside',
-            });
-            
-            // Allow wheel zoom
-            const elem = imgRef.current.parentElement;
-            if (elem) {
-                elem.addEventListener('wheel', panzoomRef.current.zoomWithWheel);
+            try {
+                // Initialize Panzoom
+                panzoomRef.current = window.Panzoom(imgRef.current, {
+                    maxScale: 5,
+                    minScale: 1,
+                    contain: 'outside',
+                });
+                
+                // Allow wheel zoom if method exists
+                const elem = imgRef.current.parentElement;
+                if (elem && panzoomRef.current && typeof panzoomRef.current.zoomWithWheel === 'function') {
+                    elem.addEventListener('wheel', panzoomRef.current.zoomWithWheel);
+                }
+            } catch (err) {
+                console.error("Panzoom init error", err);
             }
         }
         
         return () => {
             if (panzoomRef.current) {
-                if (imgRef.current && imgRef.current.parentElement) {
+                if (imgRef.current && imgRef.current.parentElement && typeof panzoomRef.current.zoomWithWheel === 'function') {
                     imgRef.current.parentElement.removeEventListener('wheel', panzoomRef.current.zoomWithWheel);
                 }
                 if (typeof panzoomRef.current.destroy === 'function') {
-                    panzoomRef.current.destroy();
+                    try {
+                        panzoomRef.current.destroy();
+                    } catch (e) {
+                        console.error("Panzoom destroy error", e);
+                    }
                 }
             }
         };
