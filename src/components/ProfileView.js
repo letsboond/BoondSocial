@@ -1825,11 +1825,11 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
                                 <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100 mb-6">
                                     <div className="flex justify-between items-center mb-2">
                                         <span className="text-sm font-medium text-slate-600">{lang === 'id' ? 'Biaya Aktivasi' : 'Activation Fee'}</span>
-                                        <span className="font-bold text-slate-900">{lang === 'id' ? 'IDR 50.000' : 'IDR 50.000'}</span>
+                                        <span className="font-bold text-slate-900">{lang === 'id' ? 'IDR 0 (Gratis)' : 'IDR 0 (Free)'}</span>
                                     </div>
                                     <div className="flex justify-between items-center text-xs text-slate-400">
                                         <span>{lang === 'id' ? 'Durasi Langganan' : 'Subscription Duration'}</span>
-                                        <span>{lang === 'id' ? '30 Hari' : '30 Days'}</span>
+                                        <span>{lang === 'id' ? 'Selamanya' : 'Forever'}</span>
                                     </div>
                                 </div>
 
@@ -1845,7 +1845,7 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
                                         </>
                                     ) : (
                                         <>
-                                            {lang === 'id' ? 'Bayar & Aktifkan' : 'Pay & Activate'}
+                                            {lang === 'id' ? 'Aktifkan Komunitas' : 'Activate Community'}
                                         </>
                                     )}
                                 </button>
