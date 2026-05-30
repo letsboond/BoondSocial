@@ -26,8 +26,8 @@ const BuyView = ({ t, user, lang }) => {
     };
 
     const products = [
-        { id: 1, name: "Keychain Boond Series", image: "/gear-2.jpg" },
-        { id: 2, name: "Custom Made", image: "/gear-1.jpg" },
+        { id: 1, name: "Keychain Boond Series", image: "/gear-1.jpg" },
+        { id: 2, name: "Custom Made", image: "/gear-2.jpg" },
     ];
 
     return (
