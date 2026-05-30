@@ -940,14 +940,14 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
 
                                             <div className="bg-white p-4 rounded-2xl shadow-inner border border-slate-100 mb-6 flex justify-center">
                                                 <img
-                                                    src={`https://api.qrserver.com/v1/create-qr-code/?size=256x256&color=0f172a&bgcolor=ffffff&data=${encodeURIComponent('https://boond-social.vercel.app/profile/' + profile.username.replace('@', ''))}`}
+                                                    src={`https://api.qrserver.com/v1/create-qr-code/?size=256x256&color=0f172a&bgcolor=ffffff&data=${encodeURIComponent('https://boond.id/profile/' + profile.username.replace('@', ''))}`}
                                                     alt="Profile QR Code"
                                                     className="w-48 h-48 object-contain rounded-lg"
                                                 />
                                             </div>
 
                                             <p className="font-mono text-xs text-slate-400 bg-slate-50 px-3 py-1 rounded-full">
-                                                boond-social.vercel.app/profile/{profile.username.replace('@', '')}
+                                                boond.id/profile/{profile.username.replace('@', '')}
                                             </p>
                                         </motion.div>
                                     </motion.div>
@@ -1249,8 +1249,8 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
                                     />
                                     <p className="text-[10px] text-red-500 font-bold mt-1 ml-1 leading-tight">
                                         {lang === 'id'
-                                            ? '*Username wajib unik sebagai alamat link profilmu (boond-social.vercel.app/profile/username)'
-                                            : '*Username must be unique as it serves as your profile link (boond-social.vercel.app/profile/username)'}
+                                            ? '*Username wajib unik sebagai alamat link profilmu (boond.id/profile/username)'
+                                            : '*Username must be unique as it serves as your profile link (boond.id/profile/username)'}
                                     </p>
                                 </div>
                                 <div>

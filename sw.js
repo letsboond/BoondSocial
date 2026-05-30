@@ -1,16 +1,16 @@
-const CACHE_NAME = 'boond-v19';
+const CACHE_NAME = 'boond-v20';
 const urlsToCache = [
     '/',
     '/index.html',
     '/logo.png',
     '/icon-192.png',
     '/icon-512.png',
-    '/src/App.js?v=19',
+    '/src/App.js?v=20',
     '/src/services/firebase.js',
     '/src/components/BottomNav.js',
     '/src/components/MapsView.js',
     '/src/components/CommunityView.js',
-    '/src/components/ProfileView.js?v=17',
+    '/src/components/ProfileView.js?v=20',
     '/src/components/LoginView.js?v=17',
     '/src/components/Hero.js',
     'https://cdn.tailwindcss.com',
