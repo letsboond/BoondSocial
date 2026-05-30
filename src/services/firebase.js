@@ -21,5 +21,6 @@ if (!firebase.apps.length) {
 window.auth = firebase.auth();
 window.db = firebase.firestore();
 window.googleProvider = new firebase.auth.GoogleAuthProvider();
+window.storage = firebase.storage();
 
 console.log("Firebase initialized successfully");

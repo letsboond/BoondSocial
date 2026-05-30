@@ -268,6 +268,7 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
     // Connection Privacy Logic
     const [isConnected, setIsConnected] = useState(false);
     const [isCopied, setIsCopied] = useState(false);
+    const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
 
     // Privacy Logic
     const accessMode = profile.accessMode || 'private'; // private, public, timed
@@ -515,6 +516,26 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
                 alert("Location not found.");
             }
         });
+    };
+
+    const handleAvatarChange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        setIsUploadingAvatar(true);
+        try {
+            const storageRef = window.storage.ref();
+            const avatarRef = storageRef.child(`avatars/${window.auth.currentUser.uid}_${Date.now()}`);
+            await avatarRef.put(file);
+            const downloadURL = await avatarRef.getDownloadURL();
+            
+            setFormData(prev => ({ ...prev, avatar: downloadURL }));
+        } catch (error) {
+            console.error("Error uploading avatar:", error);
+            alert((lang === 'id' ? "Gagal mengunggah foto profil: " : "Failed to upload avatar: ") + error.message);
+        } finally {
+            setIsUploadingAvatar(false);
+        }
     };
 
     const handleSave = async () => {
@@ -1254,10 +1275,15 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
                                     </p>
                                 </div>
                                 <div>
-                                    <label className="text-xs font-bold text-slate-500 uppercase ml-1">Avatar URL</label>
+                                    <label className="text-xs font-bold text-slate-500 uppercase ml-1">Avatar / Profile Picture</label>
                                     <div className="flex gap-3 items-center">
                                         {/* Avatar Preview */}
-                                        <div className="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 overflow-hidden flex-shrink-0">
+                                        <div className="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 overflow-hidden flex-shrink-0 relative">
+                                            {isUploadingAvatar && (
+                                                <div className="absolute inset-0 bg-white/70 flex items-center justify-center z-10">
+                                                    <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                                                </div>
+                                            )}
                                             {formData.avatar ? (
                                                 <img src={formData.avatar} alt="Preview" className="w-full h-full object-cover" onError={(e) => e.target.src = `https://ui-avatars.com/api/?name=${formData.username}`} />
                                             ) : (
@@ -1272,9 +1298,27 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
                                             onChange={e => setFormData({ ...formData, avatar: e.target.value })}
                                             className="flex-1 px-4 py-2 rounded-xl border border-slate-200 text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white/80"
                                             placeholder="https://..."
+                                            disabled={isUploadingAvatar}
                                         />
 
                                         <div className="flex gap-1">
+                                            {/* Upload File Input */}
+                                            <input 
+                                                type="file" 
+                                                accept="image/*" 
+                                                className="hidden" 
+                                                id="avatar-upload" 
+                                                onChange={handleAvatarChange}
+                                                disabled={isUploadingAvatar}
+                                            />
+                                            <label 
+                                                htmlFor="avatar-upload"
+                                                className="bg-emerald-50 p-2 rounded-xl border border-emerald-100 hover:bg-emerald-100 text-emerald-600 transition cursor-pointer flex items-center justify-center"
+                                                title={lang === 'id' ? "Upload Gambar" : "Upload Image"}
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                                            </label>
+
                                             <button
                                                 onClick={() => {
                                                     const user = window.auth.currentUser;
