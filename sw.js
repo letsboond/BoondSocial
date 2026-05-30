@@ -9,6 +9,7 @@ const urlsToCache = [
     '/src/services/firebase.js',
     '/src/components/BottomNav.js',
     '/src/components/MapsView.js',
+    '/src/utils/compressor.js',
     '/src/components/BuyView.js?v=24',
     '/src/components/CommunityView.js',
     '/src/components/ProfileView.js?v=28',

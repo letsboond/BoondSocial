@@ -520,11 +520,16 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
     };
 
     const handleAvatarChange = async (e) => {
-        const file = e.target.files[0];
+        let file = e.target.files[0];
         if (!file) return;
 
         setIsUploadingAvatar(true);
         try {
+            // Compress the image before uploading (Max 800x800, 70% quality)
+            if (window.utils && window.utils.compressImage) {
+                file = await window.utils.compressImage(file, 800, 800, 0.7);
+            }
+
             // Hapus avatar lama di Firebase Storage jika ada
             if (formData.avatar && formData.avatar.includes('firebasestorage.googleapis.com')) {
                 try {
