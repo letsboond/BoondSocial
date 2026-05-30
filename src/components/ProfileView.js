@@ -248,6 +248,7 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
 
 
     // Edit Mode State
+    const [selectedImage, setSelectedImage] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [showChat, setShowChat] = useState(false);
     const [showQR, setShowQR] = useState(false);
@@ -990,14 +991,19 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
                             {/* Identity Section Wrapper for tighter internal spacing */}
                             <div className="flex flex-col items-center gap-3 w-full">
                                 {/* Avatar Ring */}
-                                <div className="relative group cursor-pointer" onClick={() => setShowQR(true)}>
+                                {/* Avatar Ring */}
+                                <div className="relative group">
                                     <div className="absolute inset-0 bg-gradient-to-tr from-blue-400 to-sky-300 rounded-full blur opacity-40 group-hover:opacity-60 transition duration-500"></div>
                                     <img
                                         src={profile.avatar}
                                         alt={profile.name}
-                                        className="relative w-32 h-32 rounded-full border-4 border-white object-cover shadow-2xl"
+                                        onClick={() => setSelectedImage(profile.avatar)}
+                                        className="relative w-32 h-32 rounded-full border-4 border-white object-cover shadow-2xl cursor-pointer"
                                     />
-                                    <div className="absolute bottom-1 right-1 bg-white text-slate-900 w-8 h-8 rounded-full border-4 border-transparent flex items-center justify-center shadow-lg hover:scale-110 transition">
+                                    <div 
+                                        onClick={() => setShowQR(true)}
+                                        className="absolute bottom-1 right-1 bg-white text-slate-900 w-8 h-8 rounded-full border-4 border-transparent flex items-center justify-center shadow-lg hover:scale-110 transition cursor-pointer z-10"
+                                    >
                                         {getIcon('qr-code', 'w-4 h-4')}
                                     </div>
                                 </div>
@@ -1150,7 +1156,8 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
 
                             {/* Privacy Control Panel (Owner Only) */}
                             {isOwner && (
-                                <PrivacyControlPanel profile={profile} currentUser={window.auth.currentUser} db={window.db} lang={lang} />
+                                {/* Hiding Link Privacy Control Panel as requested */}
+                                {/* <PrivacyControlPanel profile={profile} currentUser={window.auth.currentUser} db={window.db} lang={lang} /> */}
                             )}
 
                             {/* Links List - PRIVACY AWARE */}
@@ -1850,6 +1857,12 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
                     )}
                 </AnimatePresence>
             </div>
+            
+            {/* Full Screen Image Viewer Modal */}
+            <window.ImageViewerModal 
+                src={selectedImage} 
+                onClose={() => setSelectedImage(null)} 
+            />
         </div >
     );
 };

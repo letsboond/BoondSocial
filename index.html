@@ -128,19 +128,23 @@
     <script type="text/babel" src="/src/data/mock_data.js"></script>
 
     <!-- 2. Components -->
+    <script type="text/babel" src="/src/components/ImageViewerModal.js?v=26"></script>
     <script type="text/babel" src="/src/components/ChatRoom.js"></script>
     <script type="text/babel" src="/src/components/BottomNav.js"></script>
     <script type="text/babel" src="/src/components/MapsView.js"></script>
     <script type="text/babel" src="/src/components/CommunityView.js"></script>
     <script type="text/babel" src="/src/components/HistoryView.js?v=17"></script>
-    <script type="text/babel" src="/src/components/BuyView.js?v=23"></script>
+    <script type="text/babel" src="/src/components/BuyView.js?v=24"></script>
     <script type="text/babel" src="/src/components/Hero.js"></script>
     <script type="text/babel" src="/src/components/LoginView.js?v=17"></script>
     <script type="text/babel" src="/src/components/CommunityFeed.js"></script>
     <!-- Kept just in case, but unused in App.js now -->
-    <script type="text/babel" src="/src/components/ProfileView.js?v=25"></script>
+    <script type="text/babel" src="/src/components/ProfileView.js?v=26"></script>
 
-    <!-- 3. Main App Logic (Must be last) -->
+    <!-- Add Panzoom for Pinch-to-Zoom support -->
+    <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom@4.6.2/dist/panzoom.min.js"></script>
+
+    <!-- 2. Main Components (JSX converted via Babel on the fly) -->
     <script type="text/babel" src="/src/App.js?v=24"></script>
 
     <!-- Service Worker Registration -->

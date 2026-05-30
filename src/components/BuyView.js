@@ -8,6 +8,7 @@ const BuyView = ({ t, user, lang }) => {
     const [nfcStatus, setNfcStatus] = useState('idle'); // idle, scanning, success, error
     const [nfcMessage, setNfcMessage] = useState('');
     const [isNfcSupported, setIsNfcSupported] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(null);
 
     useEffect(() => {
         if (window.lucide) {
@@ -199,7 +200,7 @@ const BuyView = ({ t, user, lang }) => {
                         transition={{ delay: idx * 0.1 }}
                         className="bg-white/60 backdrop-blur-xl rounded-3xl overflow-hidden shadow-xl shadow-blue-900/5 border border-white/50 group"
                     >
-                        <div className="h-56 md:h-72 relative overflow-hidden">
+                        <div className="h-56 md:h-72 relative overflow-hidden cursor-pointer" onClick={() => setSelectedImage(item.image)}>
                             <img src={item.image} className="w-full h-full object-cover transition duration-700 group-hover:scale-105" alt={item.name} />
                         </div>
                         <div className="p-5 md:p-6 flex flex-col sm:flex-row items-center justify-between gap-4 relative z-10">
@@ -221,7 +222,13 @@ const BuyView = ({ t, user, lang }) => {
                 </div>
             </div>
 
-
+            {/* Full Screen Image Viewer Modal */}
+            {window.ImageViewerModal && (
+                <window.ImageViewerModal 
+                    src={selectedImage} 
+                    onClose={() => setSelectedImage(null)} 
+                />
+            )}
         </div>
     );
 };
