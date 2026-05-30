@@ -306,23 +306,35 @@ const App = () => {
                             return;
                         }
 
-                        const newProfile = {
-                            uid: u.uid,
-                            displayName: u.displayName || "User",
-                            email: u.email,
-                            photoURL: u.photoURL,
-                            bio: "Halo! Saya pengguna baru Boond.",
-                            username: "@" + (u.email ? u.email.split('@')[0] : 'user'),
-                            role: "User",
-                            accessMode: "public",
-                            isVisible: false,
-                            links: [
-                                { id: 1, title: "WhatsApp", url: "", icon: "MessageCircle", color: "bg-green-500" },
-                                { id: 2, title: "Instagram", url: "", icon: "Instagram", color: "bg-pink-500" }
-                            ],
-                            joinedAt: new Date()
-                        };
-                        userRef.set(newProfile).catch(console.error);
+                        // FIXED: Double check with server to prevent race-condition profile resets
+                        // Sometimes onSnapshot fires with doc.exists=false during weak network
+                        // so we explicitly fetch from server first before overwriting.
+                        userRef.get({ source: 'server' }).then((serverDoc) => {
+                            if (!serverDoc.exists) {
+                                console.log("Server confirms profile does not exist. Creating new profile...");
+                                const newProfile = {
+                                    uid: u.uid,
+                                    displayName: u.displayName || "User",
+                                    email: u.email,
+                                    photoURL: u.photoURL,
+                                    bio: "Halo! Saya pengguna baru Boond.",
+                                    username: "@" + (u.email ? u.email.split('@')[0] : 'user'),
+                                    role: "User",
+                                    accessMode: "public",
+                                    isVisible: false,
+                                    links: [
+                                        { id: 1, title: "WhatsApp", url: "", icon: "MessageCircle", color: "bg-green-500" },
+                                        { id: 2, title: "Instagram", url: "", icon: "Instagram", color: "bg-pink-500" }
+                                    ],
+                                    joinedAt: new Date()
+                                };
+                                userRef.set(newProfile).catch(console.error);
+                            } else {
+                                console.log("Race condition avoided! Server actually has the profile.");
+                            }
+                        }).catch(err => {
+                            console.error("Error double checking server doc:", err);
+                        });
                     }
                     setLoadingAuth(false);
                 }, (error) => {

@@ -206,7 +206,7 @@ const PrivacyControlPanel = ({ profile, currentUser, db, lang }) => {
                     className={`flex flex-col items-center justify-center p-2 rounded-xl border transition ${mode === 'private' ? 'bg-slate-800 text-white border-slate-800' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}`}
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mb-1"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
-                    <span className="text-[10px] font-bold">Private</span>
+                    <span className="text-[10px] font-bold">{lang === 'id' ? 'Privat' : 'Private'}</span>
                 </button>
 
                 <button
@@ -222,7 +222,7 @@ const PrivacyControlPanel = ({ profile, currentUser, db, lang }) => {
                     className={`flex flex-col items-center justify-center p-2 rounded-xl border transition ${mode === 'public' ? 'bg-green-500 text-white border-green-500' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}`}
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mb-1"><circle cx="12" cy="12" r="10" /><line x1="2" x2="22" y1="12" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>
-                    <span className="text-[10px] font-bold">Public</span>
+                    <span className="text-[10px] font-bold">{lang === 'id' ? 'Publik' : 'Public'}</span>
                 </button>
             </div>
         </div>
@@ -957,8 +957,8 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
                                                 {getIcon('x', 'w-6 h-6')}
                                             </button>
 
-                                            <h3 className="text-2xl font-bold mb-2 text-slate-900">Scan to Connect</h3>
-                                            <p className="text-slate-500 mb-6 text-sm">Scan QR ini pakai kamera HP untuk buka profil Boond.</p>
+                                            <h3 className="text-2xl font-bold mb-2 text-slate-900">{lang === 'id' ? 'Scan untuk Terhubung' : 'Scan to Connect'}</h3>
+                                            <p className="text-slate-500 mb-6 text-sm">{lang === 'id' ? 'Scan QR ini pakai kamera HP untuk buka profil Boond.' : 'Scan this QR with your phone camera to open the Boond profile.'}</p>
 
                                             <div className="bg-white p-4 rounded-2xl shadow-inner border border-slate-100 mb-6 flex justify-center">
                                                 <img
@@ -1111,7 +1111,7 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
                                         className="flex-1 bg-slate-100 text-slate-700 py-2.5 rounded-xl font-bold border border-slate-200 hover:bg-slate-200 transition flex items-center justify-center gap-2"
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" /></svg>
-                                        {lang === 'id' ? 'Edit' : 'Edit'}
+                                        {lang === 'id' ? 'Ubah' : 'Edit'}
                                     </button>
                                 )}
 
@@ -1192,7 +1192,7 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
                                         </motion.a>
                                     ))}
                                     {(!profile.links || profile.links.length === 0) && (
-                                        <p className="text-center text-slate-400 text-sm italic">No links added yet.</p>
+                                        <p className="text-center text-slate-400 text-sm italic">{lang === 'id' ? 'Belum ada link.' : 'No links added yet.'}</p>
                                     )}
                                 </div>
                             ) : (
@@ -1266,7 +1266,7 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
                                     />
                                 </div>
                                 <div>
-                                    <label className="text-xs font-bold text-slate-500 uppercase ml-1">Username</label>
+                                    <label className="text-xs font-bold text-slate-500 uppercase ml-1">{lang === 'id' ? 'Username' : 'Username'}</label>
                                     <input
                                         value={formData.username}
                                         onChange={e => setFormData({ ...formData, username: e.target.value })}
@@ -1280,7 +1280,7 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
                                     </p>
                                 </div>
                                 <div>
-                                    <label className="text-xs font-bold text-slate-500 uppercase ml-1">Avatar / Profile Picture</label>
+                                    <label className="text-xs font-bold text-slate-500 uppercase ml-1">{lang === 'id' ? 'Avatar / Foto Profil' : 'Avatar / Profile Picture'}</label>
                                     <div className="flex gap-3 items-center mb-2">
                                         {/* Avatar Preview */}
                                         <div className="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 overflow-hidden flex-shrink-0 relative">
@@ -1323,7 +1323,7 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
                                             title={lang === 'id' ? "Upload Gambar" : "Upload Image"}
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
-                                            {lang === 'id' ? "UPLOAD" : "UPLOAD"}
+                                            {lang === 'id' ? "UNGGAH" : "UPLOAD"}
                                         </label>
 
                                         <button
@@ -1514,7 +1514,7 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
                                             </div>
                                         </div>
                                         <div>
-                                            <label className="text-xs font-bold text-slate-500 uppercase ml-1">Bio</label>
+                                            <label className="text-xs font-bold text-slate-500 uppercase ml-1">{lang === 'id' ? 'Bio' : 'Bio'}</label>
                                             <textarea
                                                 value={formData.bio}
                                                 onChange={e => setFormData({ ...formData, bio: e.target.value })}
@@ -1586,7 +1586,7 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
 
                                                             {/* Close Button Mobile Overlay (Optional) */}
                                                             <div className="flex justify-between items-center mb-3">
-                                                                <h5 className="text-xs font-bold text-slate-500 uppercase">Icon & Color</h5>
+                                                                <h5 className="text-xs font-bold text-slate-500 uppercase">{lang === 'id' ? 'Ikon & Warna' : 'Icon & Color'}</h5>
                                                                 <button onClick={() => setActiveIconPicker(null)} className="text-slate-400 hover:text-slate-600">
                                                                     {getIcon('x', 'w-4 h-4')}
                                                                 </button>
@@ -1824,12 +1824,12 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
                                 {/* Payment Simulation */}
                                 <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100 mb-6">
                                     <div className="flex justify-between items-center mb-2">
-                                        <span className="text-sm font-medium text-slate-600">Biaya Aktivasi</span>
-                                        <span className="font-bold text-slate-900">IDR 50.000</span>
+                                        <span className="text-sm font-medium text-slate-600">{lang === 'id' ? 'Biaya Aktivasi' : 'Activation Fee'}</span>
+                                        <span className="font-bold text-slate-900">{lang === 'id' ? 'IDR 50.000' : 'IDR 50.000'}</span>
                                     </div>
                                     <div className="flex justify-between items-center text-xs text-slate-400">
-                                        <span>Durasi Langganan</span>
-                                        <span>30 Hari</span>
+                                        <span>{lang === 'id' ? 'Durasi Langganan' : 'Subscription Duration'}</span>
+                                        <span>{lang === 'id' ? '30 Hari' : '30 Days'}</span>
                                     </div>
                                 </div>
 
