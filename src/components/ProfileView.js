@@ -243,7 +243,7 @@ const AvatarCropperModal = ({ src, lang, onConfirm, onCancel }) => {
         lastX: 0, lastY: 0,
         lastDist: 0,
         imgW: 0, imgH: 0,
-        canvasSize: 300,
+        canvasSize: 220,
         imgEl: null,
     });
     const [ready, setReady] = useState(false);
@@ -421,22 +421,27 @@ const AvatarCropperModal = ({ src, lang, onConfirm, onCancel }) => {
     };
 
     return (
-        <div className="fixed inset-0 z-[100] bg-black/90 flex flex-col items-center justify-center p-4" onClick={onCancel}>
-            <div className="w-full max-w-sm" onClick={e => e.stopPropagation()}>
+        <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-center justify-center p-6" onClick={onCancel}>
+            <div className="bg-slate-900 rounded-3xl p-4 w-full max-w-xs shadow-2xl" onClick={e => e.stopPropagation()}>
                 {/* Header */}
-                <div className="text-center mb-4">
-                    <h3 className="text-white text-lg font-bold">{lang === 'id' ? 'Sesuaikan Foto' : 'Crop Photo'}</h3>
-                    <p className="text-slate-400 text-xs mt-1">{lang === 'id' ? 'Geser & cubit untuk mengatur. Gambar akan dipotong 1:1.' : 'Drag & pinch to adjust. Image will be cropped to 1:1.'}</p>
+                <div className="flex items-center justify-between mb-3">
+                    <div>
+                        <h3 className="text-white text-sm font-bold">{lang === 'id' ? 'Sesuaikan Foto' : 'Crop Photo'}</h3>
+                        <p className="text-slate-500 text-[10px] mt-0.5">{lang === 'id' ? 'Geser & cubit untuk atur posisi' : 'Drag & pinch to adjust'}</p>
+                    </div>
+                    <button onClick={onCancel} className="w-7 h-7 rounded-full bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
                 </div>
 
                 {/* Canvas */}
-                <div className="flex justify-center mb-4">
+                <div className="flex justify-center mb-3">
                     <canvas
                         ref={canvasRef}
-                        width={300}
-                        height={300}
+                        width={220}
+                        height={220}
                         className="rounded-full touch-none cursor-move"
-                        style={{ background: '#111' }}
+                        style={{ background: '#111', width: 220, height: 220 }}
                         onMouseDown={onMouseDown}
                         onMouseMove={onMouseMove}
                         onMouseUp={onMouseUp}
@@ -448,24 +453,19 @@ const AvatarCropperModal = ({ src, lang, onConfirm, onCancel }) => {
                     />
                 </div>
 
-                {/* Hint */}
-                <p className="text-center text-slate-500 text-xs mb-5">
-                    {lang === 'id' ? '📐 Panduan 1:1 aktif • Geser untuk posisikan wajah' : '📐 1:1 guide active • Drag to position your face'}
-                </p>
-
                 {/* Actions */}
-                <div className="flex gap-3">
+                <div className="flex gap-2">
                     <button
                         onClick={onCancel}
-                        className="flex-1 py-3 rounded-2xl border border-slate-600 text-slate-300 font-bold hover:bg-slate-800 transition"
+                        className="flex-1 py-2.5 rounded-xl border border-slate-600 text-slate-300 text-sm font-bold hover:bg-slate-800 transition"
                     >
                         {lang === 'id' ? 'Batal' : 'Cancel'}
                     </button>
                     <button
                         onClick={handleConfirm}
-                        className="flex-1 py-3 rounded-2xl bg-blue-600 text-white font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-500/30"
+                        className="flex-1 py-2.5 rounded-xl bg-blue-600 text-white text-sm font-bold hover:bg-blue-700 transition"
                     >
-                        {lang === 'id' ? 'Gunakan Foto' : 'Use Photo'}
+                        {lang === 'id' ? 'Pakai' : 'Use'}
                     </button>
                 </div>
             </div>

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boond-v30';
+const CACHE_NAME = 'boond-v31';
 const urlsToCache = [
     '/',
     '/index.html',
@@ -12,7 +12,7 @@ const urlsToCache = [
     '/src/utils/compressor.js',
     '/src/components/BuyView.js?v=24',
     '/src/components/CommunityView.js',
-    '/src/components/ProfileView.js?v=30',
+    '/src/components/ProfileView.js?v=31',
     '/src/components/LoginView.js?v=17',
     '/src/components/Hero.js',
     'https://cdn.tailwindcss.com',
