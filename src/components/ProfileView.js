@@ -248,7 +248,6 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
 
 
     // Edit Mode State
-    const [selectedImage, setSelectedImage] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [showChat, setShowChat] = useState(false);
     const [showQR, setShowQR] = useState(false);
@@ -270,6 +269,7 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
     const [isConnected, setIsConnected] = useState(false);
     const [isCopied, setIsCopied] = useState(false);
     const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+    const [zoomedAvatar, setZoomedAvatar] = useState(false);
 
     // Privacy Logic
     const accessMode = profile.accessMode || 'private'; // private, public, timed
@@ -991,18 +991,17 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
                             {/* Identity Section Wrapper for tighter internal spacing */}
                             <div className="flex flex-col items-center gap-3 w-full">
                                 {/* Avatar Ring */}
-                                {/* Avatar Ring */}
                                 <div className="relative group">
-                                    <div className="absolute inset-0 bg-gradient-to-tr from-blue-400 to-sky-300 rounded-full blur opacity-40 group-hover:opacity-60 transition duration-500"></div>
+                                    <div className="absolute inset-0 bg-gradient-to-tr from-blue-400 to-sky-300 rounded-full blur opacity-40 group-hover:opacity-60 transition duration-500 pointer-events-none"></div>
                                     <img
                                         src={profile.avatar}
                                         alt={profile.name}
-                                        onClick={() => setSelectedImage(profile.avatar)}
-                                        className="relative w-32 h-32 rounded-full border-4 border-white object-cover shadow-2xl cursor-pointer"
+                                        className="relative w-32 h-32 rounded-full border-4 border-white object-cover shadow-2xl cursor-zoom-in hover:scale-105 transition"
+                                        onClick={() => setZoomedAvatar(true)}
                                     />
                                     <div 
-                                        onClick={() => setShowQR(true)}
                                         className="absolute bottom-1 right-1 bg-white text-slate-900 w-8 h-8 rounded-full border-4 border-transparent flex items-center justify-center shadow-lg hover:scale-110 transition cursor-pointer z-10"
+                                        onClick={(e) => { e.stopPropagation(); setShowQR(true); }}
                                     >
                                         {getIcon('qr-code', 'w-4 h-4')}
                                     </div>
@@ -1154,11 +1153,10 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
                                 </div>
                             )}
 
-                            {/* Privacy Control Panel (Owner Only) */}
-                            {isOwner && (
-                                {/* Hiding Link Privacy Control Panel as requested */}
-                                {/* <PrivacyControlPanel profile={profile} currentUser={window.auth.currentUser} db={window.db} lang={lang} /> */}
-                            )}
+                            {/* Privacy Control Panel (Owner Only) - HIDDEN as per request */}
+                            {/* {isOwner && (
+                                <PrivacyControlPanel profile={profile} currentUser={window.auth.currentUser} db={window.db} lang={lang} />
+                            )} */}
 
                             {/* Links List - PRIVACY AWARE */}
                             {isLinksVisible ? (
@@ -1857,12 +1855,40 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
                     )}
                 </AnimatePresence>
             </div>
-            
-            {/* Full Screen Image Viewer Modal */}
-            <window.ImageViewerModal 
-                src={selectedImage} 
-                onClose={() => setSelectedImage(null)} 
-            />
+
+            {/* Avatar Fullscreen Modal */}
+            <AnimatePresence>
+                {zoomedAvatar && profile.avatar && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setZoomedAvatar(false)}
+                        className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4 cursor-zoom-out backdrop-blur-sm"
+                    >
+                        <motion.div 
+                            initial={{ scale: 0.9 }}
+                            animate={{ scale: 1 }}
+                            exit={{ scale: 0.9 }}
+                            className="relative max-w-[95vw] max-h-[90vh]"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <img
+                                src={profile.avatar}
+                                alt="Avatar zoom"
+                                className="w-full h-full object-contain rounded-full max-w-[90vw] max-h-[90vh] shadow-2xl"
+                            />
+                            <button 
+                                className="absolute top-2 right-2 md:top-4 md:right-4 text-white bg-black/50 hover:bg-black/80 p-2 rounded-full transition backdrop-blur-md border border-white/20"
+                                onClick={() => setZoomedAvatar(false)}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            </button>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
         </div >
     );
 };

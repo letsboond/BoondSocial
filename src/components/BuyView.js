@@ -200,7 +200,10 @@ const BuyView = ({ t, user, lang }) => {
                         transition={{ delay: idx * 0.1 }}
                         className="bg-white/60 backdrop-blur-xl rounded-3xl overflow-hidden shadow-xl shadow-blue-900/5 border border-white/50 group"
                     >
-                        <div className="h-56 md:h-72 relative overflow-hidden cursor-pointer" onClick={() => setSelectedImage(item.image)}>
+                        <div 
+                            className="h-56 md:h-72 relative overflow-hidden cursor-zoom-in"
+                            onClick={() => setSelectedImage(item.image)}
+                        >
                             <img src={item.image} className="w-full h-full object-cover transition duration-700 group-hover:scale-105" alt={item.name} />
                         </div>
                         <div className="p-5 md:p-6 flex flex-col sm:flex-row items-center justify-between gap-4 relative z-10">
@@ -222,13 +225,40 @@ const BuyView = ({ t, user, lang }) => {
                 </div>
             </div>
 
-            {/* Full Screen Image Viewer Modal */}
-            {window.ImageViewerModal && (
-                <window.ImageViewerModal 
-                    src={selectedImage} 
-                    onClose={() => setSelectedImage(null)} 
-                />
-            )}
+
+            {/* Image Fullscreen Modal */}
+            <AnimatePresence>
+                {selectedImage && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setSelectedImage(null)}
+                        className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4 cursor-zoom-out backdrop-blur-sm"
+                    >
+                        <motion.div 
+                            initial={{ scale: 0.9 }}
+                            animate={{ scale: 1 }}
+                            exit={{ scale: 0.9 }}
+                            className="relative max-w-[95vw] max-h-[90vh]"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <img
+                                src={selectedImage}
+                                alt="Full screen zoom"
+                                className="w-full h-full object-contain rounded-2xl shadow-2xl"
+                            />
+                            <button 
+                                className="absolute top-2 right-2 md:-top-4 md:-right-4 text-white bg-black/50 hover:bg-black/80 p-2 rounded-full transition backdrop-blur-md border border-white/20"
+                                onClick={() => setSelectedImage(null)}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            </button>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
         </div>
     );
 };

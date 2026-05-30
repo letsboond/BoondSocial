@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boond-v28';
+const CACHE_NAME = 'boond-v26';
 const urlsToCache = [
     '/',
     '/index.html',
@@ -8,7 +8,6 @@ const urlsToCache = [
     '/src/App.js?v=24',
     '/src/services/firebase.js',
     '/src/components/BottomNav.js',
-    '/src/components/ImageViewerModal.js?v=28',
     '/src/components/MapsView.js',
     '/src/components/BuyView.js?v=24',
     '/src/components/CommunityView.js',
