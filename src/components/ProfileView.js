@@ -280,7 +280,7 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
     const isLinksVisible = isOwner || isConnected || isPublic || isTimedUnlock;
 
     const handleCopyLink = () => {
-        const link = `${window.location.origin}/profile/${profile.username.replace('@', '')}`;
+        const link = `boond.id/profile/${profile.username.replace('@', '')}`;
         navigator.clipboard.writeText(link).then(() => {
             setIsCopied(true);
             setTimeout(() => setIsCopied(false), 2000);
