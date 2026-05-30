@@ -1297,75 +1297,39 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
                                 </div>
                                 <div>
                                     <label className="text-xs font-bold text-slate-500 uppercase ml-1">{lang === 'id' ? 'Avatar / Foto Profil' : 'Avatar / Profile Picture'}</label>
-                                    <div className="flex gap-3 items-center mb-2">
+                                    <div className="flex items-center gap-3 mt-2">
                                         {/* Avatar Preview */}
-                                        <div className="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 overflow-hidden flex-shrink-0 relative">
+                                        <div className="w-14 h-14 rounded-full bg-slate-100 border-2 border-slate-200 overflow-hidden flex-shrink-0 relative shadow-sm">
                                             {isUploadingAvatar && (
-                                                <div className="absolute inset-0 bg-white/70 flex items-center justify-center z-10">
-                                                    <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                                                <div className="absolute inset-0 bg-white/80 flex items-center justify-center z-10">
+                                                    <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
                                                 </div>
                                             )}
                                             {formData.avatar ? (
                                                 <img src={formData.avatar} alt="Preview" className="w-full h-full object-cover" onError={(e) => e.target.src = `https://ui-avatars.com/api/?name=${formData.username}`} />
                                             ) : (
                                                 <div className="w-full h-full flex items-center justify-center text-slate-300">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
                                                 </div>
                                             )}
                                         </div>
 
+                                        {/* Upload Capsule Button */}
                                         <input
-                                            value={formData.avatar}
-                                            onChange={e => setFormData({ ...formData, avatar: e.target.value })}
-                                            className="flex-1 px-4 py-2 rounded-xl border border-slate-200 text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white/80"
-                                            placeholder="https://..."
-                                            disabled={isUploadingAvatar}
-                                        />
-                                    </div>
-
-                                    <div className="flex gap-2">
-                                        {/* Upload File Input */}
-                                        <input 
-                                            type="file" 
-                                            accept="image/*" 
-                                            className="hidden" 
-                                            id="avatar-upload" 
+                                            type="file"
+                                            accept="image/*"
+                                            className="hidden"
+                                            id="avatar-upload"
                                             onChange={handleAvatarChange}
                                             disabled={isUploadingAvatar}
                                         />
-                                        <label 
+                                        <label
                                             htmlFor="avatar-upload"
-                                            className="flex-1 bg-emerald-50 py-2 rounded-xl border border-emerald-100 hover:bg-emerald-100 text-emerald-600 transition cursor-pointer flex items-center justify-center gap-1.5 text-[10px] font-bold"
-                                            title={lang === 'id' ? "Upload Gambar" : "Upload Image"}
+                                            className="flex items-center gap-2 bg-slate-900 text-white px-5 py-2.5 rounded-full font-bold text-sm cursor-pointer hover:bg-slate-700 active:scale-95 transition-all shadow-md"
                                         >
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
-                                            {lang === 'id' ? "UNGGAH" : "UPLOAD"}
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                                            {isUploadingAvatar ? (lang === 'id' ? 'Mengunggah...' : 'Uploading...') : (lang === 'id' ? 'Unggah Foto' : 'Upload Photo')}
                                         </label>
-
-                                        <button
-                                            onClick={() => {
-                                                const user = window.auth.currentUser;
-                                                if (user && user.photoURL) {
-                                                    setFormData({ ...formData, avatar: user.photoURL });
-                                                } else {
-                                                    alert(lang === 'id' ? "Tidak ada foto profil Google yang ditemukan." : "No Google profile photo found.");
-                                                }
-                                            }}
-                                            className="flex-1 bg-blue-50 py-2 rounded-xl border border-blue-100 hover:bg-blue-100 text-blue-600 transition flex items-center justify-center gap-1.5 text-[10px] font-bold"
-                                            title={lang === 'id' ? "Pakai Foto Google" : "Use Google Photo"}
-                                        >
-                                            {getIcon('Google', 'w-3 h-3')}
-                                            GOOGLE
-                                        </button>
-
-                                        <button
-                                            onClick={() => setFormData({ ...formData, avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${Math.random()}` })}
-                                            className="flex-1 bg-slate-100 py-2 rounded-xl border border-slate-200 hover:bg-slate-200 text-slate-600 transition flex items-center justify-center gap-1.5 text-[10px] font-bold"
-                                            title={lang === 'id' ? "Acak (Dicebear)" : "Randomize (Dicebear)"}
-                                        >
-                                            {getIcon('shuffle', 'w-3 h-3')}
-                                            RANDOM
-                                        </button>
                                     </div>
                                 </div>
 
