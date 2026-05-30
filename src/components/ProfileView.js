@@ -525,6 +525,17 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
 
         setIsUploadingAvatar(true);
         try {
+            // Hapus avatar lama di Firebase Storage jika ada
+            if (formData.avatar && formData.avatar.includes('firebasestorage.googleapis.com')) {
+                try {
+                    const oldAvatarRef = window.storage.refFromURL(formData.avatar);
+                    await oldAvatarRef.delete();
+                    console.log("Old avatar deleted successfully.");
+                } catch (delError) {
+                    console.warn("Failed to delete old avatar:", delError);
+                }
+            }
+
             const storageRef = window.storage.ref();
             const avatarRef = storageRef.child(`avatars/${window.auth.currentUser.uid}_${Date.now()}`);
             await avatarRef.put(file);
