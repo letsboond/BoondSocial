@@ -24,8 +24,13 @@ const ImageViewerModal = ({ src, onClose }) => {
         }
         
         return () => {
-            if (imgRef.current && imgRef.current.parentElement && panzoomRef.current) {
-                imgRef.current.parentElement.removeEventListener('wheel', panzoomRef.current.zoomWithWheel);
+            if (panzoomRef.current) {
+                if (imgRef.current && imgRef.current.parentElement) {
+                    imgRef.current.parentElement.removeEventListener('wheel', panzoomRef.current.zoomWithWheel);
+                }
+                if (typeof panzoomRef.current.destroy === 'function') {
+                    panzoomRef.current.destroy();
+                }
             }
         };
     }, [src]);
@@ -34,6 +39,7 @@ const ImageViewerModal = ({ src, onClose }) => {
         <AnimatePresence>
             {src && (
                 <motion.div 
+                    key="image-viewer-modal"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
