@@ -229,6 +229,250 @@ const PrivacyControlPanel = ({ profile, currentUser, db, lang }) => {
     );
 };
 
+// ─────────────────────────────────────────────
+// AVATAR CROPPER MODAL
+// Drag to pan, scroll/pinch to zoom, 1:1 crop guide
+// ─────────────────────────────────────────────
+const AvatarCropperModal = ({ src, lang, onConfirm, onCancel }) => {
+    const { useEffect, useRef, useState } = React;
+    const canvasRef = useRef(null);
+    const stateRef = useRef({
+        scale: 1, minScale: 1,
+        offsetX: 0, offsetY: 0,
+        dragging: false,
+        lastX: 0, lastY: 0,
+        lastDist: 0,
+        imgW: 0, imgH: 0,
+        canvasSize: 300,
+        imgEl: null,
+    });
+    const [ready, setReady] = useState(false);
+
+    const drawCanvas = () => {
+        const s = stateRef.current;
+        const canvas = canvasRef.current;
+        if (!canvas || !s.imgEl) return;
+        const cs = s.canvasSize;
+        const ctx = canvas.getContext('2d');
+
+        ctx.clearRect(0, 0, cs, cs);
+
+        // Draw image
+        ctx.save();
+        ctx.drawImage(s.imgEl, s.offsetX, s.offsetY, s.imgW * s.scale, s.imgH * s.scale);
+        ctx.restore();
+
+        // Dark overlay outside crop circle
+        ctx.save();
+        ctx.fillStyle = 'rgba(0,0,0,0.5)';
+        ctx.fillRect(0, 0, cs, cs);
+        // Cut out circle
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.beginPath();
+        ctx.arc(cs / 2, cs / 2, cs / 2 - 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        // Border ring
+        ctx.save();
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.arc(cs / 2, cs / 2, cs / 2 - 4, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+
+        // Grid lines (rule of thirds)
+        ctx.save();
+        ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(cs / 2, cs / 2, cs / 2 - 4, 0, Math.PI * 2);
+        ctx.clip();
+        [cs/3, cs*2/3].forEach(x => {
+            ctx.moveTo(x, 0); ctx.lineTo(x, cs);
+        });
+        [cs/3, cs*2/3].forEach(y => {
+            ctx.moveTo(0, y); ctx.lineTo(cs, y);
+        });
+        ctx.stroke();
+        ctx.restore();
+    };
+
+    const clampOffset = (s) => {
+        const cs = s.canvasSize;
+        const iw = s.imgW * s.scale;
+        const ih = s.imgH * s.scale;
+        s.offsetX = Math.min(0, Math.max(s.offsetX, cs - iw));
+        s.offsetY = Math.min(0, Math.max(s.offsetY, cs - ih));
+    };
+
+    useEffect(() => {
+        const img = new Image();
+        img.onload = () => {
+            const s = stateRef.current;
+            const cs = s.canvasSize;
+            const scaleW = cs / img.naturalWidth;
+            const scaleH = cs / img.naturalHeight;
+            const initScale = Math.max(scaleW, scaleH);
+            s.imgEl = img;
+            s.imgW = img.naturalWidth;
+            s.imgH = img.naturalHeight;
+            s.scale = initScale;
+            s.minScale = initScale;
+            // Center
+            s.offsetX = (cs - img.naturalWidth * initScale) / 2;
+            s.offsetY = (cs - img.naturalHeight * initScale) / 2;
+            clampOffset(s);
+            setReady(true);
+        };
+        img.src = src;
+    }, [src]);
+
+    useEffect(() => {
+        if (ready) drawCanvas();
+    }, [ready]);
+
+    // Mouse events
+    const onMouseDown = (e) => {
+        stateRef.current.dragging = true;
+        stateRef.current.lastX = e.clientX;
+        stateRef.current.lastY = e.clientY;
+    };
+    const onMouseMove = (e) => {
+        const s = stateRef.current;
+        if (!s.dragging) return;
+        s.offsetX += e.clientX - s.lastX;
+        s.offsetY += e.clientY - s.lastY;
+        s.lastX = e.clientX;
+        s.lastY = e.clientY;
+        clampOffset(s);
+        drawCanvas();
+    };
+    const onMouseUp = () => { stateRef.current.dragging = false; };
+
+    const onWheel = (e) => {
+        e.preventDefault();
+        const s = stateRef.current;
+        const cs = s.canvasSize;
+        const delta = e.deltaY < 0 ? 1.08 : 0.93;
+        const newScale = Math.max(s.minScale, s.scale * delta);
+        const cx = cs / 2, cy = cs / 2;
+        s.offsetX = cx - (cx - s.offsetX) * (newScale / s.scale);
+        s.offsetY = cy - (cy - s.offsetY) * (newScale / s.scale);
+        s.scale = newScale;
+        clampOffset(s);
+        drawCanvas();
+    };
+
+    // Touch events
+    const onTouchStart = (e) => {
+        const s = stateRef.current;
+        if (e.touches.length === 1) {
+            s.dragging = true;
+            s.lastX = e.touches[0].clientX;
+            s.lastY = e.touches[0].clientY;
+        } else if (e.touches.length === 2) {
+            s.dragging = false;
+            const dx = e.touches[0].clientX - e.touches[1].clientX;
+            const dy = e.touches[0].clientY - e.touches[1].clientY;
+            s.lastDist = Math.hypot(dx, dy);
+        }
+    };
+    const onTouchMove = (e) => {
+        e.preventDefault();
+        const s = stateRef.current;
+        if (e.touches.length === 1 && s.dragging) {
+            s.offsetX += e.touches[0].clientX - s.lastX;
+            s.offsetY += e.touches[0].clientY - s.lastY;
+            s.lastX = e.touches[0].clientX;
+            s.lastY = e.touches[0].clientY;
+            clampOffset(s);
+            drawCanvas();
+        } else if (e.touches.length === 2) {
+            const dx = e.touches[0].clientX - e.touches[1].clientX;
+            const dy = e.touches[0].clientY - e.touches[1].clientY;
+            const dist = Math.hypot(dx, dy);
+            const delta = dist / s.lastDist;
+            const cs = s.canvasSize;
+            const cx = cs / 2, cy = cs / 2;
+            const newScale = Math.max(s.minScale, s.scale * delta);
+            s.offsetX = cx - (cx - s.offsetX) * (newScale / s.scale);
+            s.offsetY = cy - (cy - s.offsetY) * (newScale / s.scale);
+            s.scale = newScale;
+            s.lastDist = dist;
+            clampOffset(s);
+            drawCanvas();
+        }
+    };
+    const onTouchEnd = () => { stateRef.current.dragging = false; };
+
+    const handleConfirm = () => {
+        const s = stateRef.current;
+        const cs = s.canvasSize;
+        // Draw only the circle region to output canvas
+        const out = document.createElement('canvas');
+        out.width = cs; out.height = cs;
+        const octx = out.getContext('2d');
+        if (s.imgEl) {
+            octx.drawImage(s.imgEl, s.offsetX, s.offsetY, s.imgW * s.scale, s.imgH * s.scale);
+        }
+        out.toBlob((blob) => { if (blob) onConfirm(blob); }, 'image/jpeg', 0.9);
+    };
+
+    return (
+        <div className="fixed inset-0 z-[100] bg-black/90 flex flex-col items-center justify-center p-4" onClick={onCancel}>
+            <div className="w-full max-w-sm" onClick={e => e.stopPropagation()}>
+                {/* Header */}
+                <div className="text-center mb-4">
+                    <h3 className="text-white text-lg font-bold">{lang === 'id' ? 'Sesuaikan Foto' : 'Crop Photo'}</h3>
+                    <p className="text-slate-400 text-xs mt-1">{lang === 'id' ? 'Geser & cubit untuk mengatur. Gambar akan dipotong 1:1.' : 'Drag & pinch to adjust. Image will be cropped to 1:1.'}</p>
+                </div>
+
+                {/* Canvas */}
+                <div className="flex justify-center mb-4">
+                    <canvas
+                        ref={canvasRef}
+                        width={300}
+                        height={300}
+                        className="rounded-full touch-none cursor-move"
+                        style={{ background: '#111' }}
+                        onMouseDown={onMouseDown}
+                        onMouseMove={onMouseMove}
+                        onMouseUp={onMouseUp}
+                        onMouseLeave={onMouseUp}
+                        onWheel={onWheel}
+                        onTouchStart={onTouchStart}
+                        onTouchMove={onTouchMove}
+                        onTouchEnd={onTouchEnd}
+                    />
+                </div>
+
+                {/* Hint */}
+                <p className="text-center text-slate-500 text-xs mb-5">
+                    {lang === 'id' ? '📐 Panduan 1:1 aktif • Geser untuk posisikan wajah' : '📐 1:1 guide active • Drag to position your face'}
+                </p>
+
+                {/* Actions */}
+                <div className="flex gap-3">
+                    <button
+                        onClick={onCancel}
+                        className="flex-1 py-3 rounded-2xl border border-slate-600 text-slate-300 font-bold hover:bg-slate-800 transition"
+                    >
+                        {lang === 'id' ? 'Batal' : 'Cancel'}
+                    </button>
+                    <button
+                        onClick={handleConfirm}
+                        className="flex-1 py-3 rounded-2xl bg-blue-600 text-white font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-500/30"
+                    >
+                        {lang === 'id' ? 'Gunakan Foto' : 'Use Photo'}
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate, t, lang, setLang, onLogout }) => {
     const { motion, AnimatePresence } = window.Motion;
     const { useEffect, useState, useRef } = React;
@@ -388,6 +632,10 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
     ];
 
     const [activeIconPicker, setActiveIconPicker] = useState(null);
+    const [cropSrc, setCropSrc] = useState(null); // raw data URL setelah pilih file
+    const [showCropper, setShowCropper] = useState(false);
+    const cropCanvasRef = React.useRef(null);
+    const cropStateRef = React.useRef({ scale: 1, offsetX: 0, offsetY: 0, dragging: false, lastX: 0, lastY: 0, imgEl: null });
 
     // Helper to get icon
     const getIcon = (name, className = "w-4 h-4") => {
@@ -519,15 +767,32 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
         });
     };
 
-    const handleAvatarChange = async (e) => {
-        let file = e.target.files[0];
+    // Step 1: Pilih file → buka crop modal
+    const handleAvatarChange = (e) => {
+        const file = e.target.files[0];
         if (!file) return;
+        // Reset file input so same file can be re-selected
+        e.target.value = '';
 
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            setCropSrc(ev.target.result);
+            setShowCropper(true);
+        };
+        reader.readAsDataURL(file);
+    };
+
+    // Step 2: Setelah crop dikonfirmasi → compress & upload
+    const handleCropConfirm = async (croppedBlob) => {
+        setShowCropper(false);
+        setCropSrc(null);
         setIsUploadingAvatar(true);
         try {
-            // Compress the image before uploading (Max 800x800, 70% quality)
+            let file = new File([croppedBlob], 'avatar.jpg', { type: 'image/jpeg' });
+
+            // Compress (sudah 1:1 dari crop, cukup resize ke 600x600)
             if (window.utils && window.utils.compressImage) {
-                file = await window.utils.compressImage(file, 800, 800, 0.7);
+                file = await window.utils.compressImage(file, 600, 600, 0.8);
             }
 
             // Hapus avatar lama di Firebase Storage jika ada
@@ -535,7 +800,6 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
                 try {
                     const oldAvatarRef = window.storage.refFromURL(formData.avatar);
                     await oldAvatarRef.delete();
-                    console.log("Old avatar deleted successfully.");
                 } catch (delError) {
                     console.warn("Failed to delete old avatar:", delError);
                 }
@@ -545,7 +809,6 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
             const avatarRef = storageRef.child(`avatars/${window.auth.currentUser.uid}_${Date.now()}`);
             await avatarRef.put(file);
             const downloadURL = await avatarRef.getDownloadURL();
-            
             setFormData(prev => ({ ...prev, avatar: downloadURL }));
         } catch (error) {
             console.error("Error uploading avatar:", error);
@@ -1314,7 +1577,7 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
                                             )}
                                         </div>
 
-                                        {/* Upload Capsule Button */}
+                                        {/* Upload Full-Width Button */}
                                         <input
                                             type="file"
                                             accept="image/*"
@@ -1325,13 +1588,23 @@ const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate,
                                         />
                                         <label
                                             htmlFor="avatar-upload"
-                                            className="flex items-center gap-2 bg-slate-900 text-white px-5 py-2.5 rounded-full font-bold text-sm cursor-pointer hover:bg-slate-700 active:scale-95 transition-all shadow-md"
+                                            className="flex-1 flex items-center justify-center gap-2 bg-slate-900 text-white py-3 rounded-2xl font-bold text-sm cursor-pointer hover:bg-slate-700 active:scale-95 transition-all shadow-md"
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
                                             {isUploadingAvatar ? (lang === 'id' ? 'Mengunggah...' : 'Uploading...') : (lang === 'id' ? 'Unggah Foto' : 'Upload Photo')}
                                         </label>
                                     </div>
                                 </div>
+
+                                {/* Avatar Cropper Modal */}
+                                {showCropper && cropSrc && (
+                                    <AvatarCropperModal
+                                        src={cropSrc}
+                                        lang={lang}
+                                        onConfirm={handleCropConfirm}
+                                        onCancel={() => { setShowCropper(false); setCropSrc(null); }}
+                                    />
+                                )}
 
                                 {/* Community Specific Fields */}
                                 {profile.isCommunity && (
