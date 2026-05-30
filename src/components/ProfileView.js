@@ -420,28 +420,34 @@ const AvatarCropperModal = ({ src, lang, onConfirm, onCancel }) => {
         out.toBlob((blob) => { if (blob) onConfirm(blob); }, 'image/jpeg', 0.9);
     };
 
-    return (
-        <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-center justify-center p-6" onClick={onCancel}>
-            <div className="bg-slate-900 rounded-3xl p-4 w-full max-w-xs shadow-2xl" onClick={e => e.stopPropagation()}>
+    const modalContent = (
+        <div
+            style={{ position: 'fixed', inset: 0, zIndex: 9999, backgroundColor: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}
+            onClick={onCancel}
+        >
+            <div
+                style={{ background: '#0f172a', borderRadius: '24px', padding: '16px', width: '100%', maxWidth: '300px', boxShadow: '0 25px 50px rgba(0,0,0,0.5)' }}
+                onClick={e => e.stopPropagation()}
+            >
                 {/* Header */}
-                <div className="flex items-center justify-between mb-3">
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
                     <div>
-                        <h3 className="text-white text-sm font-bold">{lang === 'id' ? 'Sesuaikan Foto' : 'Crop Photo'}</h3>
-                        <p className="text-slate-500 text-[10px] mt-0.5">{lang === 'id' ? 'Geser & cubit untuk atur posisi' : 'Drag & pinch to adjust'}</p>
+                        <h3 style={{ color: 'white', fontSize: '14px', fontWeight: 700, margin: 0 }}>{lang === 'id' ? 'Sesuaikan Foto' : 'Crop Photo'}</h3>
+                        <p style={{ color: '#64748b', fontSize: '10px', margin: '2px 0 0' }}>{lang === 'id' ? 'Geser & cubit untuk atur posisi' : 'Drag & pinch to adjust'}</p>
                     </div>
-                    <button onClick={onCancel} className="w-7 h-7 rounded-full bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition">
+                    <button onClick={onCancel} style={{ width: 28, height: 28, borderRadius: '50%', background: '#1e293b', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                     </button>
                 </div>
 
                 {/* Canvas */}
-                <div className="flex justify-center mb-3">
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px' }}>
                     <canvas
                         ref={canvasRef}
                         width={220}
                         height={220}
-                        className="rounded-full touch-none cursor-move"
-                        style={{ background: '#111', width: 220, height: 220 }}
+                        className="touch-none cursor-move"
+                        style={{ background: '#111', borderRadius: '50%', width: 220, height: 220, display: 'block' }}
                         onMouseDown={onMouseDown}
                         onMouseMove={onMouseMove}
                         onMouseUp={onMouseUp}
@@ -454,16 +460,16 @@ const AvatarCropperModal = ({ src, lang, onConfirm, onCancel }) => {
                 </div>
 
                 {/* Actions */}
-                <div className="flex gap-2">
+                <div style={{ display: 'flex', gap: '8px' }}>
                     <button
                         onClick={onCancel}
-                        className="flex-1 py-2.5 rounded-xl border border-slate-600 text-slate-300 text-sm font-bold hover:bg-slate-800 transition"
+                        style={{ flex: 1, padding: '10px', borderRadius: '12px', border: '1px solid #475569', background: 'transparent', color: '#cbd5e1', fontWeight: 700, fontSize: '14px', cursor: 'pointer' }}
                     >
                         {lang === 'id' ? 'Batal' : 'Cancel'}
                     </button>
                     <button
                         onClick={handleConfirm}
-                        className="flex-1 py-2.5 rounded-xl bg-blue-600 text-white text-sm font-bold hover:bg-blue-700 transition"
+                        style={{ flex: 1, padding: '10px', borderRadius: '12px', border: 'none', background: '#2563eb', color: 'white', fontWeight: 700, fontSize: '14px', cursor: 'pointer' }}
                     >
                         {lang === 'id' ? 'Pakai' : 'Use'}
                     </button>
@@ -471,7 +477,10 @@ const AvatarCropperModal = ({ src, lang, onConfirm, onCancel }) => {
             </div>
         </div>
     );
+
+    return ReactDOM.createPortal(modalContent, document.body);
 };
+
 
 const ProfileView = ({ profile, isEmbedded = false, isOwner = false, onNavigate, t, lang, setLang, onLogout }) => {
     const { motion, AnimatePresence } = window.Motion;
