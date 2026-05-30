@@ -257,37 +257,15 @@ const AvatarCropperModal = ({ src, lang, onConfirm, onCancel }) => {
 
         ctx.clearRect(0, 0, cs, cs);
 
-        // Draw image
-        ctx.save();
+        // Draw image cleanly
         ctx.drawImage(s.imgEl, s.offsetX, s.offsetY, s.imgW * s.scale, s.imgH * s.scale);
-        ctx.restore();
 
-        // Dark overlay outside crop circle
+        // Grid lines (rule of thirds) — clipped to circle
         ctx.save();
-        ctx.fillStyle = 'rgba(0,0,0,0.5)';
-        ctx.fillRect(0, 0, cs, cs);
-        // Cut out circle
-        ctx.globalCompositeOperation = 'destination-out';
-        ctx.beginPath();
-        ctx.arc(cs / 2, cs / 2, cs / 2 - 4, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-
-        // Border ring
-        ctx.save();
-        ctx.strokeStyle = 'white';
-        ctx.lineWidth = 2.5;
-        ctx.beginPath();
-        ctx.arc(cs / 2, cs / 2, cs / 2 - 4, 0, Math.PI * 2);
-        ctx.stroke();
-        ctx.restore();
-
-        // Grid lines (rule of thirds)
-        ctx.save();
-        ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+        ctx.strokeStyle = 'rgba(255,255,255,0.25)';
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.arc(cs / 2, cs / 2, cs / 2 - 4, 0, Math.PI * 2);
+        ctx.arc(cs / 2, cs / 2, cs / 2, 0, Math.PI * 2);
         ctx.clip();
         [cs/3, cs*2/3].forEach(x => {
             ctx.moveTo(x, 0); ctx.lineTo(x, cs);
@@ -295,6 +273,15 @@ const AvatarCropperModal = ({ src, lang, onConfirm, onCancel }) => {
         [cs/3, cs*2/3].forEach(y => {
             ctx.moveTo(0, y); ctx.lineTo(cs, y);
         });
+        ctx.stroke();
+        ctx.restore();
+
+        // Border ring
+        ctx.save();
+        ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(cs / 2, cs / 2, cs / 2 - 1, 0, Math.PI * 2);
         ctx.stroke();
         ctx.restore();
     };
